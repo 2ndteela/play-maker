@@ -22,7 +22,7 @@ class Player extends Component {
         e.preventDefault()
         if (e.changedTouches && e.changedTouches.length) {
             const touch = e.changedTouches[0];
-            this.props.callback(touch, this.props.idx, this.props.isHome)
+            this.props.callback(touch, this.props.idx, this.props.away)
         }
     }
 

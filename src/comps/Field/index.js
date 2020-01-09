@@ -16,7 +16,7 @@ class Field extends Component {
             ],
             awayTeam: [],
             teamSize: 7,
-
+            formation: 'fiveStack'
         }
         this.handleMove = this.handleMove.bind(this)
         this.updateTeam = this.updateTeam.bind(this)
@@ -32,7 +32,7 @@ class Field extends Component {
         this.updateState(value, 'teamSize')
     }
 
-    handleMove(touch, idx, isHome) {
+    handleMove(touch, idx, isAway) {
 
         const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
@@ -51,8 +51,19 @@ class Field extends Component {
         newX = newX > xLimit ? xLimit : newX
         newY = newY > yLimit ? yLimit : newY
 
-        if(isHome) {
+        if(isAway) {
             
+            const arr = [...this.state.awayTeam]
+            arr[idx] = {
+                x: newX,
+                y: newY
+            }
+
+            this.setState({
+                awayTeam: arr
+            })
+        }
+        else {
             const arr = [...this.state.homeTeam]
             arr[idx] = {
                 x: newX,
@@ -63,21 +74,19 @@ class Field extends Component {
                 homeTeam: arr
             })
         }
-        else {
-
-        }
 
     }
 
     setup() {
-
-        const screenWidth = window.screen.width;
         const screenHeight = window.screen.height;
         const containerWidth = document.getElementById('field-container').clientWidth
         const playerWidth = document.querySelector('.player-div').clientWidth
 
+        const home = this.fiveStack(containerWidth, playerWidth, screenHeight)
+
         this.setState({
-            homeTeam: this.fiveStack(containerWidth, playerWidth, screenHeight)
+            homeTeam: home,
+            awayTeam: this.makeDefense(home, playerWidth)
         })
     }
 
@@ -94,16 +103,14 @@ class Field extends Component {
             currentHeight -= (playerWidth * 2)
         }
 
-        homeArr.push({
-            x: (containerWidth - playerWidth) / 2,
-            y: screenHeight * (28/40)
-
-        })
-
-        homeArr.push({
+        homeArr.unshift({
             x: (containerWidth - playerWidth) / 5,
             y: screenHeight * (25/40)
+        })
 
+        homeArr.unshift({
+            x: (containerWidth - playerWidth) / 2,
+            y: screenHeight * (28/40)
         })
 
         return homeArr
@@ -138,6 +145,39 @@ class Field extends Component {
 
     }
 
+    makeDefense(home, playerWidth) {
+        const away = []
+        home.forEach(p => {
+            away.push({
+                x: p.x - (playerWidth * 1.5),
+                y: p.y
+            })
+        })
+        return away
+    }
+
+    startDraw(e) {
+        console.log('start')
+
+        let touch
+
+        if (e.changedTouches && e.changedTouches.length) {
+            touch = e.changedTouches[0];
+            console.log(touch)
+        }
+
+        const canvas = document.getElementById('field-drawer')
+        const ctx = canvas.getContext('2d')
+    }
+
+    moveDraw(e) {
+
+    }
+
+    endDraw(e) {
+
+    }
+
     componentDidMount() {
         this.setup()
     }
@@ -161,12 +201,25 @@ class Field extends Component {
                             idx={i} 
                             key={i + '-hp'} 
                             callback={this.handleMove} 
-                            isHome={true}
+                        ></Player>
+                    ))}
+
+                    {this.state.awayTeam.map( (p, i) => (
+                        <Player 
+                            away={true}
+                            x={p.x} 
+                            y={p.y} 
+                            idx={i} 
+                            key={i + '-ap'} 
+                            callback={this.handleMove} 
                         ></Player>
                     ))}
                     
 
-                <canvas id="field-drawer"></canvas>
+                <canvas id="field-drawer" 
+                onTouchStart={e => this.startDraw(e)} 
+                onTouchMove={e => this.moveDraw(e)} 
+                onTouchEnd={e => this.endDraw(e)}></canvas>
             </div>
          );
     }
