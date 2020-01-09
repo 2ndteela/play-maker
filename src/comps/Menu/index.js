@@ -20,9 +20,9 @@ class Menu extends Component {
                     <span></span>
                 </div>
                 <div id="slide-out">
-                    <div>
-                    <h2># of Players</h2>
-                    <IncBox label="# of Players" val={this.props.teamSize} callback={this.props.teamCallBack} ></IncBox>
+                    <div className="row-div">
+                        <h2># of Players</h2>
+                        <IncBox label="# of Players" val={this.props.teamSize} callback={this.props.teamCallBack} ></IncBox>
                     </div>
                 </div>
             </div>

@@ -39,14 +39,14 @@ class Field extends Component {
         const containerWidth = document.getElementById('field-container').clientWidth
         const playerWidth = document.querySelector('.player-div').clientWidth
 
-        const xOffset = (screenWidth - containerWidth + 24) / 2
-        const yOffset = 48 + 12
+        const xOffset = (screenWidth - containerWidth + playerWidth) / 2
+        const yOffset = 48 + (playerWidth)
 
         const xLimit = (screenWidth/2 + containerWidth/2) - xOffset
-        const yLimit = screenHeight - 48 - 12;
+        const yLimit = screenHeight - 48 - (playerWidth)
 
-        let newX = (touch.pageX - xOffset) > -12 ? (touch.pageX - xOffset) : -12
-        let newY = (touch.pageY - yOffset) > -12 ? (touch.pageY - yOffset) : -12
+        let newX = (touch.pageX - xOffset) > -(playerWidth/2) ? (touch.pageX - xOffset) : -(playerWidth/2)
+        let newY = (touch.pageY - yOffset) > -(playerWidth/2) ? (touch.pageY - yOffset) : -(playerWidth/2)
 
         newX = newX > xLimit ? xLimit : newX
         newY = newY > yLimit ? yLimit : newY
@@ -69,6 +69,62 @@ class Field extends Component {
 
     }
 
+    setup() {
+
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const containerWidth = document.getElementById('field-container').clientWidth
+        const playerWidth = document.querySelector('.player-div').clientWidth
+
+        this.setState({
+            homeTeam: this.fiveStack(containerWidth, playerWidth, screenHeight)
+        })
+    }
+
+
+    fiveStack(containerWidth, playerWidth, screenHeight) {
+        const homeArr = []
+        let currentHeight = screenHeight * (11/20)
+
+        for(let i = 0; i < this.state.teamSize - 2; i++) {
+            homeArr.push({
+                    x: (containerWidth - playerWidth) / 2 ,
+                    y: currentHeight
+                })
+            currentHeight -= (playerWidth * 2)
+        }
+
+        homeArr.push({
+            x: (containerWidth - playerWidth) / 2,
+            y: screenHeight * (28/40)
+
+        })
+
+        homeArr.push({
+            x: (containerWidth - playerWidth) / 5,
+            y: screenHeight * (25/40)
+
+        })
+
+        return homeArr
+    }
+
+    sixStack() {
+
+    }
+
+    hoStack() {
+
+    }
+
+    sideStack() {
+
+    }
+
+    componentDidMount() {
+        this.setup()
+    }
+
     render() { 
         return ( 
             <div id="field-container">
@@ -82,6 +138,7 @@ class Field extends Component {
 
                     {this.state.homeTeam.map( (p, i) => (
                         <Player 
+                            away={false}
                             x={p.x} 
                             y={p.y} 
                             idx={i} 

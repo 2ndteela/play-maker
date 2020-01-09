@@ -33,6 +33,14 @@ class Player extends Component {
     }
 
     render() { 
+        if(this.props.away) {
+            return <div 
+            style={{left: this.props.x, top: this.props.y, touchAction: 'none' }}
+            className={this.state.active ? "player-div active away" : "player-div away"} 
+            onTouchStart={() => this.activate()} 
+            onTouchMove={(e) => this.handleMove(e)}
+            onTouchEnd={()=>this.deactivate()}></div>
+        }
         return ( 
             <div 
             style={{left: this.props.x, top: this.props.y, touchAction: 'none' }}

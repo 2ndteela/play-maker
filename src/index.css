@@ -41,3 +41,8 @@ code {
   flex-direction: column;
   flex: 1;
 }
+
+.row-div {
+  flex-direction: row;
+  width: 100%;
+}
