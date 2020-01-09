@@ -1,0 +1,27 @@
+#menu-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+}
+
+#burger {
+    height: 48px;
+    justify-content: space-around;
+    padding: 8px;   
+}
+
+#burger span {
+    background-color: white;
+    width: 36px;
+    height: 4px;
+}
+
+#slide-out {
+    position: absolute;
+    left: 0;
+    top: 48px;
+    background-color: white;
+    padding: 16px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}

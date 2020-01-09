@@ -1,0 +1,52 @@
+#field-container {
+    width: 50vh;
+    height: 100%;
+    max-width: 90vw;
+    position: relative;
+}
+
+.field-zone {
+    background-color: green;
+    width: 100%;
+}
+
+#endzone-1 {
+    width: 100%;
+    border-bottom: 2px solid white;
+    flex: 25;
+}
+
+#field-body {
+    width: 100%;
+    border-bottom: 2px solid white;
+    flex: 70;
+}
+
+#endzone-2 {
+    width: 100%;
+    flex: 25;
+}
+
+#field-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.brick-mark {
+    position: absolute;
+    height: 4px;
+    background-color: white;
+    width: 4vw;
+}
+
+#top-brick {
+    top: 28.5%;
+}
+
+#bottom-brick {
+    bottom: 28.5%;
+}
+

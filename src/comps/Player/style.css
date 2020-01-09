@@ -1,0 +1,13 @@
+.player-div {
+    background-color: blue;
+    border: .25vw solid black;
+    width: 5vw;
+    height: 5vw;
+    border-radius: 2.5vw;
+    position: absolute;
+    z-index: 10 ;
+}
+
+.active {
+    border: 2px solid goldenrod !important;
+}

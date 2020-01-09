@@ -1,13 +1,10 @@
 import React from 'react'
+import Field from '../../comps/Field'
 
 import './style.css'
 
 const Home = () => (
-    <div>
-        <h1>
-            Home
-        </h1>
-    </div>
+        <Field></Field>
 )
 
 export default Home
