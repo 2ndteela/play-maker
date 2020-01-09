@@ -109,8 +109,25 @@ class Field extends Component {
         return homeArr
     }
 
-    sixStack() {
+    sixStack(containerWidth, playerWidth, screenHeight) {
+        const homeArr = []
+        let currentHeight = screenHeight * (11/20)
 
+        for(let i = 0; i < this.state.teamSize - 1; i++) {
+            homeArr.push({
+                    x: (containerWidth - playerWidth) / 2 ,
+                    y: currentHeight
+                })
+            currentHeight -= (playerWidth * 2)
+        }
+
+        homeArr.push({
+            x: (containerWidth - playerWidth) / 2,
+            y: screenHeight * (28/40)
+
+        })
+
+        return homeArr
     }
 
     hoStack() {
