@@ -8,15 +8,14 @@ class Field extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            homeTeam: [
-                {
-                    x: 200,
-                    y: 50
-                }
-            ],
+            homeTeam: [{ x: 200, y: 200}],
             awayTeam: [],
             teamSize: 7,
-            formation: 'fiveStack'
+            formation: 'fiveStack',
+            ctx: null,
+            playerWidth: 0,
+            fieldWidth: 0,
+            fieldHeight: 0
         }
         this.handleMove = this.handleMove.bind(this)
         this.updateTeam = this.updateTeam.bind(this)
@@ -78,39 +77,35 @@ class Field extends Component {
     }
 
     setup() {
-        const screenHeight = window.screen.height;
-        const containerWidth = document.getElementById('field-container').clientWidth
-        const playerWidth = document.querySelector('.player-div').clientWidth
-
-        const home = this.fiveStack(containerWidth, playerWidth, screenHeight)
+        const home = this.fiveStack()
 
         this.setState({
             homeTeam: home,
-            awayTeam: this.makeDefense(home, playerWidth)
+            awayTeam: this.makeDefense(home)
         })
     }
 
 
-    fiveStack(containerWidth, playerWidth, screenHeight) {
+    fiveStack() {
         const homeArr = []
-        let currentHeight = screenHeight * (11/20)
+        let currentHeight = this.state.screenHeight * (1/2)
 
         for(let i = 0; i < this.state.teamSize - 2; i++) {
             homeArr.push({
-                    x: (containerWidth - playerWidth) / 2 ,
+                    x: ( this.state.fieldWidth - this.state.playerWidth) / 2 ,
                     y: currentHeight
                 })
-            currentHeight -= (playerWidth * 2)
+            currentHeight -= (this.state.playerWidth * 2)
         }
 
         homeArr.unshift({
-            x: (containerWidth - playerWidth) / 5,
-            y: screenHeight * (25/40)
+            x: (this.state.fieldWidth - this.state.playerWidth) / 5,
+            y: this.state.screenHeight * (3/5)
         })
 
         homeArr.unshift({
-            x: (containerWidth - playerWidth) / 2,
-            y: screenHeight * (28/40)
+            x: (this.state.fieldWidth - this.state.playerWidth) / 2,
+            y: this.state.screenHeight * (13/20)
         })
 
         return homeArr
@@ -145,11 +140,11 @@ class Field extends Component {
 
     }
 
-    makeDefense(home, playerWidth) {
+    makeDefense(home) {
         const away = []
         home.forEach(p => {
             away.push({
-                x: p.x - (playerWidth * 1.5),
+                x: p.x - (this.state.playerWidth * 1.5),
                 y: p.y
             })
         })
@@ -165,9 +160,6 @@ class Field extends Component {
             touch = e.changedTouches[0];
             console.log(touch)
         }
-
-        const canvas = document.getElementById('field-drawer')
-        const ctx = canvas.getContext('2d')
     }
 
     moveDraw(e) {
@@ -179,6 +171,19 @@ class Field extends Component {
     }
 
     componentDidMount() {
+        const screenHeight = window.screen.height;
+        const containerWidth = document.getElementById('field-container').clientWidth
+        const canvas = document.getElementById('field-drawer')
+        const ctx = canvas.getContext('2d')
+
+        console.log(screenHeight, containerWidth)
+
+        this.setState({
+            fieldWidth: containerWidth,
+            fieldHeight: screenHeight,
+            ctx: ctx
+        })
+
         this.setup()
     }
 
