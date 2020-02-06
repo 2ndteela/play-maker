@@ -88,7 +88,7 @@ class Field extends Component {
 
     fiveStack() {
         const homeArr = []
-        let currentHeight = this.state.screenHeight * (1/2)
+        let currentHeight = this.state.fieldHeight * (1/2)
 
         for(let i = 0; i < this.state.teamSize - 2; i++) {
             homeArr.push({
@@ -100,12 +100,12 @@ class Field extends Component {
 
         homeArr.unshift({
             x: (this.state.fieldWidth - this.state.playerWidth) / 5,
-            y: this.state.screenHeight * (3/5)
+            y: this.state.fieldHeight * (3/5)
         })
 
         homeArr.unshift({
             x: (this.state.fieldWidth - this.state.playerWidth) / 2,
-            y: this.state.screenHeight * (13/20)
+            y: this.state.fieldHeight * (13/20)
         })
 
         return homeArr
@@ -152,39 +152,64 @@ class Field extends Component {
     }
 
     startDraw(e) {
-        console.log('start')
-
         let touch
+        const ctx = this.state.ctx
 
         if (e.changedTouches && e.changedTouches.length) {
             touch = e.changedTouches[0];
-            console.log(touch)
+            
+            const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
+            const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+            ctx.moveTo(x, y)
         }
     }
 
     moveDraw(e) {
+        const ctx = this.state.ctx
+        let touch
+
+        if (e.changedTouches && e.changedTouches.length) {
+            e.preventDefault()
+            touch = e.changedTouches[0];
+ 
+            const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
+            const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+            ctx.lineTo(x, y)
+            ctx.stroke()
+            ctx.moveTo(x, y)
+        }
 
     }
 
     endDraw(e) {
-
+        this.moveDraw(e)
+        this.state.ctx.stroke()
     }
 
     componentDidMount() {
+        const container = document.getElementById('field-container')
         const screenHeight = window.screen.height;
-        const containerWidth = document.getElementById('field-container').clientWidth
+        const containerWidth = container.clientWidth
+        const playerWidth = document.querySelector('.player-div').clientWidth
         const canvas = document.getElementById('field-drawer')
         const ctx = canvas.getContext('2d')
+        const screenWidth = window.screen.width;
+        const xOffset = (screenWidth - containerWidth + playerWidth) / 2
+        const yOffset = 48 + (playerWidth)
 
-        console.log(screenHeight, containerWidth)
+        canvas.width = containerWidth
+        canvas.height = container.clientHeight
 
         this.setState({
             fieldWidth: containerWidth,
             fieldHeight: screenHeight,
-            ctx: ctx
-        })
+            playerWidth: playerWidth,
+            ctx: ctx,
+            xOffset: xOffset,
+            yOffset: yOffset
+        }, () => this.setup())
 
-        this.setup()
+        
     }
 
     render() { 
@@ -221,10 +246,12 @@ class Field extends Component {
                     ))}
                     
 
-                <canvas id="field-drawer" 
+                <canvas 
+                id="field-drawer" 
                 onTouchStart={e => this.startDraw(e)} 
-                onTouchMove={e => this.moveDraw(e)} 
+                onTouchMove={e => { this.moveDraw(e) }} 
                 onTouchEnd={e => this.endDraw(e)}></canvas>
+                
             </div>
          );
     }
