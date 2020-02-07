@@ -50,3 +50,7 @@
     bottom: 28.5%;
 }
 
+#field-wrapper {
+    height: 100%;
+    width: 100%;
+}

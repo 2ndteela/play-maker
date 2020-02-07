@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import MaterialIcon from 'material-icons-react'
 import './style.css'
 
 import Player from '../Player'
 import Menu from '../Menu'
+import Header from '../Header'
 
 class Field extends Component {
     constructor(props) {
@@ -15,7 +17,8 @@ class Field extends Component {
             ctx: null,
             playerWidth: 0,
             fieldWidth: 0,
-            fieldHeight: 0
+            fieldHeight: 0,
+            draw: true
         }
         this.handleMove = this.handleMove.bind(this)
         this.updateTeam = this.updateTeam.bind(this)
@@ -26,6 +29,12 @@ class Field extends Component {
             [feild]: value
         })
     }
+
+    toggleDraw() {
+        this.setState({
+          draw: !this.state.draw
+        })
+      }
 
     updateTeam(value) {
         this.updateState(value, 'teamSize')
@@ -160,6 +169,7 @@ class Field extends Component {
             
             const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
             const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+
             ctx.moveTo(x, y)
         }
     }
@@ -214,44 +224,51 @@ class Field extends Component {
 
     render() { 
         return ( 
-            <div id="field-container">
-                <Menu teamSize={this.state.teamSize} teamCallBack={this.updateTeam} ></Menu>
-                <div className="field-zone" id="endzone-1"></div>
-                <div className="field-zone" id="field-body">
-                    <div className="brick-mark" id="top-brick"></div>
-                    <div className="brick-mark" id="bottom-brick"></div>
-                </div>
-                <div className="field-zone" id="endzone-2"></div>
+            <div id="field-wrapper">
+                <Header>
+                    <Menu></Menu>
+                    <button className={ this.state.draw ? "fab-button" : "fab-button flipped-icon"} onClick={() => this.toggleDraw()} >
+                        <MaterialIcon icon="create"></MaterialIcon>
+                    </button>
+                </Header>
+                <div id="field-container">
+                    <div className="field-zone" id="endzone-1"></div>
+                    <div className="field-zone" id="field-body">
+                        <div className="brick-mark" id="top-brick"></div>
+                        <div className="brick-mark" id="bottom-brick"></div>
+                    </div>
+                    <div className="field-zone" id="endzone-2"></div>
 
-                    {this.state.homeTeam.map( (p, i) => (
-                        <Player 
-                            away={false}
-                            x={p.x} 
-                            y={p.y} 
-                            idx={i} 
-                            key={i + '-hp'} 
-                            callback={this.handleMove} 
-                        ></Player>
-                    ))}
+                        {this.state.homeTeam.map( (p, i) => (
+                            <Player 
+                                away={false}
+                                x={p.x} 
+                                y={p.y} 
+                                idx={i} 
+                                key={i + '-hp'} 
+                                callback={this.handleMove} 
+                            ></Player>
+                        ))}
 
-                    {this.state.awayTeam.map( (p, i) => (
-                        <Player 
-                            away={true}
-                            x={p.x} 
-                            y={p.y} 
-                            idx={i} 
-                            key={i + '-ap'} 
-                            callback={this.handleMove} 
-                        ></Player>
-                    ))}
+                        {this.state.awayTeam.map( (p, i) => (
+                            <Player 
+                                away={true}
+                                x={p.x} 
+                                y={p.y} 
+                                idx={i} 
+                                key={i + '-ap'} 
+                                callback={this.handleMove} 
+                            ></Player>
+                        ))}
+                        
+
+                    <canvas 
+                    id="field-drawer" 
+                    onTouchStart={e => this.startDraw(e)} 
+                    onTouchMove={e => { this.moveDraw(e) }} 
+                    onTouchEnd={e => this.endDraw(e)}></canvas>
                     
-
-                <canvas 
-                id="field-drawer" 
-                onTouchStart={e => this.startDraw(e)} 
-                onTouchMove={e => { this.moveDraw(e) }} 
-                onTouchEnd={e => this.endDraw(e)}></canvas>
-                
+                </div>
             </div>
          );
     }

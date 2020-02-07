@@ -1,21 +1,23 @@
-import React from 'react'
-import {BrowserRouter as Router, Route}  from 'react-router-dom'
-
+import React, { Component } from 'react';
 import Home from './views/Home'
-import Header from './comps/Header'
 
-function App() {
+class App extends Component  {
+
+  constructor(props) {
+    super(props);
+    this.state = { 
+    }
+
+}
+
+  render() {
+
   return (
     <div className="App">
-      <Header title="Play Maker">
-      </Header>
-      <Router>
-          <div id="home-container">
-            <Route exact path="/" component={Home}></Route>
-          </div>
-      </Router>
+      <Home></Home>
     </div>
   );
+  }
 }
 
 export default App;

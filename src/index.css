@@ -47,3 +47,18 @@ code {
   flex-direction: row;
   width: 100%;
 }
+
+.fab-button {
+  height: 36px;
+  width: 36px;
+  border-radius: 18px;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0px !important;
+  transition: .2s;
+}
+
+.flipped-icon {
+  transform: rotate(180deg);
+}

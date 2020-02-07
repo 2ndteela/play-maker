@@ -17,8 +17,10 @@
 
 .header-actions {
     flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .header-actions * {
-    margin-right: 8px;
+
 }
