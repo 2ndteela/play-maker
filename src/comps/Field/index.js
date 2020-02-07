@@ -18,7 +18,9 @@ class Field extends Component {
             playerWidth: 0,
             fieldWidth: 0,
             fieldHeight: 0,
-            draw: true
+            draw: true,
+            lastX: 0,
+            lastY: 0
         }
         this.handleMove = this.handleMove.bind(this)
         this.updateTeam = this.updateTeam.bind(this)
@@ -171,6 +173,10 @@ class Field extends Component {
             const y = touch.clientY - this.state.yOffset + this.state.playerWidth
 
             ctx.moveTo(x, y)
+            this.setState({
+                lastX: x,
+                lastY: y
+            })
         }
     }
 
@@ -179,14 +185,31 @@ class Field extends Component {
         let touch
 
         if (e.changedTouches && e.changedTouches.length) {
-            e.preventDefault()
             touch = e.changedTouches[0];
  
             const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
             const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+            
+            if(this.state.draw) {
+                ctx.globalCompositeOperation = 'source-over'
+                ctx.lineWidth = 4
+                ctx.strokeStyle = '#000'
+            }
+            else {
+                ctx.globalCompositeOperation = 'destination-out'
+                ctx.lineWidth = 40
+                ctx.strokeStyle = '#297a12'
+            }
+            ctx.beginPath()
+            ctx.moveTo(this.state.lastX, this.state.lastY)
             ctx.lineTo(x, y)
+            ctx.lineJoin = ctx.lineCap = 'round'
             ctx.stroke()
-            ctx.moveTo(x, y)
+
+            this.setState({
+                lastX: x,
+                lastY: y
+            })
         }
 
     }
