@@ -12,13 +12,16 @@ class Field extends Component {
         this.state = { 
             homeTeam: [{ x: 200, y: 200}],
             awayTeam: [],
+            frisbee: {},
+            eraser: {},
             teamSize: 7,
-            formation: 'fiveStack',
+            formation: 'sixStack',
             ctx: null,
             playerWidth: 0,
             fieldWidth: 0,
             fieldHeight: 0,
             draw: true,
+            touchDown: false,
             lastX: 0,
             lastY: 0
         }
@@ -61,7 +64,18 @@ class Field extends Component {
         newX = newX > xLimit ? xLimit : newX
         newY = newY > yLimit ? yLimit : newY
 
-        if(isAway) {
+        if(idx === -1) {
+            const frisbee = {
+                x: newX,
+                y: newY
+            }
+
+            this.setState({
+                frisbee: frisbee
+            })
+        }
+
+        else if(isAway) {
             
             const arr = [...this.state.awayTeam]
             arr[idx] = {
@@ -92,8 +106,21 @@ class Field extends Component {
 
         this.setState({
             homeTeam: home,
-            awayTeam: this.makeDefense(home)
+            awayTeam: this.makeDefense(home),
+        }, () => this.clacFrisbee())
+    }
+
+    clacFrisbee() {
+        const home = {...this.state.homeTeam[0]}
+        const frisbee = {}
+
+        frisbee.x = home.x + 15
+        frisbee.y = home.y - 10
+
+        this.setState({
+            frisbee: frisbee
         })
+
     }
 
 
@@ -122,21 +149,23 @@ class Field extends Component {
         return homeArr
     }
 
-    sixStack(containerWidth, playerWidth, screenHeight) {
+    sixStack() {
+
+
         const homeArr = []
-        let currentHeight = screenHeight * (11/20)
+        let currentHeight = this.state.fieldHeight * (11/20)
 
         for(let i = 0; i < this.state.teamSize - 1; i++) {
             homeArr.push({
-                    x: (containerWidth - playerWidth) / 2 ,
+                    x: (this.state.fieldWidth - this.state.playerWidth) / 2 ,
                     y: currentHeight
                 })
-            currentHeight -= (playerWidth * 2)
+            currentHeight -= (this.state.playerWidth * 2)
         }
 
-        homeArr.push({
-            x: (containerWidth - playerWidth) / 2,
-            y: screenHeight * (28/40)
+        homeArr.unshift({
+            x: (this.state.fieldWidth - this.state.playerWidth) / 2,
+            y: this.state.fieldHeight * (28/40)
 
         })
 
@@ -170,46 +199,50 @@ class Field extends Component {
             touch = e.changedTouches[0];
             
             const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
-            const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+            const y = touch.clientY - this.state.yOffset + this.state.playerWidth/2
 
             ctx.moveTo(x, y)
             this.setState({
                 lastX: x,
-                lastY: y
-            })
+                lastY: y,
+                touchDown: true
+            }, () => { this.moveEraser(touch) })
         }
     }
 
     moveDraw(e) {
         const ctx = this.state.ctx
         let touch
+        ctx.lineJoin = ctx.lineCap = 'round'
 
         if (e.changedTouches && e.changedTouches.length) {
             touch = e.changedTouches[0];
  
             const x = touch.clientX - this.state.xOffset + this.state.playerWidth/2
-            const y = touch.clientY - this.state.yOffset + this.state.playerWidth
+            const y = touch.clientY - this.state.yOffset + this.state.playerWidth/2
             
             if(this.state.draw) {
                 ctx.globalCompositeOperation = 'source-over'
-                ctx.lineWidth = 4
+                ctx.lineWidth = this.state.playerWidth / 8
                 ctx.strokeStyle = '#000'
             }
             else {
                 ctx.globalCompositeOperation = 'destination-out'
-                ctx.lineWidth = 40
+                ctx.lineWidth = 41
                 ctx.strokeStyle = '#297a12'
             }
             ctx.beginPath()
             ctx.moveTo(this.state.lastX, this.state.lastY)
             ctx.lineTo(x, y)
-            ctx.lineJoin = ctx.lineCap = 'round'
+
             ctx.stroke()
 
             this.setState({
                 lastX: x,
                 lastY: y
             })
+
+            this.moveEraser(touch)
         }
 
     }
@@ -217,6 +250,13 @@ class Field extends Component {
     endDraw(e) {
         this.moveDraw(e)
         this.state.ctx.stroke()
+        this.setState({
+            touchDown: false
+        })
+    }
+
+    clearDraw() {
+        this.state.ctx.clearRect(0, 0, this.state.fieldWidth, this.state.fieldHeight)
     }
 
     componentDidMount() {
@@ -239,19 +279,67 @@ class Field extends Component {
             playerWidth: playerWidth,
             ctx: ctx,
             xOffset: xOffset,
-            yOffset: yOffset
+            yOffset: yOffset,
+            resetFunction: this.fiveStack
         }, () => this.setup())
 
         
+    }
+
+    moveEraser(touch) {
+        if(this.state.touchDown && !this.state.draw) {
+            const e = {...this.state.eraser}
+            const x = touch.clientX - this.state.xOffset - 8
+            const y = touch.clientY - this.state.yOffset - 14
+
+            e.x = x + 'px'
+            e.y = y + 'px'
+
+            this.setState({
+                eraser: e
+            })
+        }
+    }
+
+    showEraser() {
+        if(this.state.touchDown && !this.state.draw) 
+            return <div style={{top: this.state.eraser.y, left: this.state.eraser.x}} id="eraser-circle"></div>
+        
+        else
+            return null
+    }
+
+    resetPlayers() {
+        let home = []
+        let def = []
+
+        if(this.state.formation === 'sixStack') home = this.sixStack()
+
+        else if (this.state.formation === 'hoStack') {
+
+        }
+
+        else home = this.fiveStack()
+        
+
+        def = this.makeDefense(home)
+
+        this.setState({
+            homeTeam: home,
+            awayTeam: def
+        }, () => this.clacFrisbee())    
     }
 
     render() { 
         return ( 
             <div id="field-wrapper">
                 <Header>
-                    <Menu></Menu>
-                    <button className={ this.state.draw ? "fab-button" : "fab-button flipped-icon"} onClick={() => this.toggleDraw()} >
-                        <MaterialIcon icon="create"></MaterialIcon>
+                    <Menu>
+                        <button onClick={() => this.resetPlayers()} >reset</button>
+                        <button onClick={() => this.clearDraw()} >clear</button>
+                    </Menu>
+                    <button className={ this.state.draw ? "hidden-button" : "hidden-button flipped-icon"} onClick={() => this.toggleDraw()} >
+                        <MaterialIcon icon="create" color="#fff" ></MaterialIcon>
                     </button>
                 </Header>
                 <div id="field-container">
@@ -284,6 +372,15 @@ class Field extends Component {
                             ></Player>
                         ))}
                         
+                    <Player 
+                        away={false}
+                        x={this.state.frisbee.x}
+                        y={this.state.frisbee.y}
+                        idx={-1}
+                        callback={this.handleMove}
+                    >
+
+                    </Player>
 
                     <canvas 
                     id="field-drawer" 
@@ -291,6 +388,8 @@ class Field extends Component {
                     onTouchMove={e => { this.moveDraw(e) }} 
                     onTouchEnd={e => this.endDraw(e)}></canvas>
                     
+                    {this.showEraser()}
+
                 </div>
             </div>
          );

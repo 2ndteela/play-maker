@@ -10,9 +10,6 @@ class Header extends Component {
     render() { 
         return ( 
             <div className="header-body">
-                <div className="header-title">
-                    {this.props.title}
-                </div>
                 <div className="header-actions">
                     {this.props.children}
                 </div>

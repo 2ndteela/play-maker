@@ -1,11 +1,11 @@
 #menu-container {
-    z-index: 50;
+    z-index: 10
 }
 
 #burger {
-    height: 48px;
-    justify-content: space-around;
-    padding: 8px;   
+    background-color: #333;
+    border: none;
+    color: white;
 }
 
 #burger span {
@@ -16,15 +16,17 @@
 
 #slide-out {
     position: absolute;
-    left: -378px;
+    left: 0;
     top: 48px;
-    background-color: white;
-    padding: 16px;
+    padding: 0 16px;
+    background-color: #333; 
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    width: 356px;
-    transition: .1s;
+    width: 100vw;
+    transition: .2s;
+    max-height: 0px;
+    overflow: hidden;
 }
 
 .open { 
-    left: 0 !important;
+    max-height: 100px !important;
 }

@@ -59,6 +59,19 @@ code {
   transition: .2s;
 }
 
+.hidden-button {
+  background-color: #333;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0px !important;
+  transition: .2s;
+  height: 36px;
+  width: 36px;
+  border-radius: 18px;
+  border: none;
+
+}
+
 .flipped-icon {
   transform: rotate(180deg);
 }

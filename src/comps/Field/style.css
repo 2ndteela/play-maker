@@ -54,3 +54,11 @@
     height: 100%;
     width: 100%;
 }
+
+#eraser-circle {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+    border: 2px solid black;
+    position: absolute;
+}

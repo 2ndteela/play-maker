@@ -15,3 +15,10 @@
 .active {
     border: 2px solid goldenrod !important;
 }
+
+.frisbee-color {
+    background-color: white !important;
+    width: 2.5vh !important;
+    height: 2.5vh !important;
+    border-radius: 1.25vh;
+}

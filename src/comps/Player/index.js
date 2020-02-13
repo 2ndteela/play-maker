@@ -41,6 +41,16 @@ class Player extends Component {
             onTouchMove={(e) => this.handleMove(e)}
             onTouchEnd={()=>this.deactivate()}></div>
         }
+
+        if(this.props.idx === -1) {
+            return <div 
+            style={{left: this.props.x, top: this.props.y, touchAction: 'none' }}
+            className="player-div frisbee-color" 
+            onTouchStart={() => this.activate()} 
+            onTouchMove={(e) => this.handleMove(e)}
+            onTouchEnd={()=>this.deactivate()}></div>
+        }
+
         return ( 
             <div 
             style={{left: this.props.x, top: this.props.y, touchAction: 'none' }}

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './style.css'
 
-// import Input from '../Input'
-import IncBox from '../IncBox'
+import MaterialIcon from 'material-icons-react'
 
 class Menu extends Component {
     constructor(props) {
@@ -22,15 +21,12 @@ class Menu extends Component {
     render() { 
         return ( 
             <div id="menu-container">
-                <div id="burger" onClick={() => this.toggleMenu()}>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+                <button id="burger" className="fab-button" onClick={() => this.toggleMenu()}>
+                    <MaterialIcon icon="keyboard_arrow_down" color='#fff' ></MaterialIcon>
+                </button>
                 <div id="slide-out" className={this.state.open ? 'open' : ''}>
                     <div className="row-div">
-                        <h2># of Players</h2>
-                        <IncBox label="# of Players" val={this.props.teamSize} callback={this.props.teamCallBack} ></IncBox>
+                        {this.props.children}
                     </div>
                 </div>
             </div>
