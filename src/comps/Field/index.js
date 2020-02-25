@@ -16,6 +16,7 @@ class Field extends Component {
             eraser: {},
             teamSize: 7,
             formation: 'sixStack',
+            fieldLength: 'full',
             ctx: null,
             playerWidth: 0,
             fieldWidth: 0,
@@ -335,8 +336,26 @@ class Field extends Component {
             <div id="field-wrapper">
                 <Header>
                     <Menu>
-                        <button onClick={() => this.resetPlayers()} >reset</button>
-                        <button onClick={() => this.clearDraw()} >clear</button>
+                        <div style={{width: '100%', flexDirection: 'column'}}>
+                            <div style={{width: '100%',alignItems: 'flex-start'}} >
+                                <select value={this.state.formation} onChange={e => this.updateState(e.target.value, 'formation')} >
+                                    <option value="fiveStack">Five Stack</option>
+                                    <option value="sixStack">Six Stack</option>
+                                    <option value="hoStack">Ho Stack</option>
+                                </select>
+                                <br />
+                                <select value={this.state.formation} onChange={e => this.updateState(e.target.value, 'fieldLength')} >
+                                    <option value="full">Full Field</option>
+                                    <option value="half">Half Field</option>
+                                    <option value="endzone">Endzone</option>
+                                </select>
+                            </div>
+                            <br></br>
+                            <div style={{width: '100%', flexDirection: 'row', paddingBottom: '16px'}} >
+                                <button onClick={() => this.resetPlayers()} style={{marginRight: '8px'}} >RESET</button>
+                                <button onClick={() => this.clearDraw()} >CLEAR</button>
+                            </div>
+                        </div>
                     </Menu>
                     <button className={ this.state.draw ? "hidden-button" : "hidden-button flipped-icon"} onClick={() => this.toggleDraw()} >
                         <MaterialIcon icon="create" color="#fff" ></MaterialIcon>

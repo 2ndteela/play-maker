@@ -27,6 +27,16 @@
     overflow: hidden;
 }
 
+#slide-out button {
+    border: none;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: white;
+    background-color: transparent;
+    flex: 1;
+    padding: 8px 24px;
+}
+
 .open { 
-    max-height: 100px !important;
+    max-height: 500px !important;
 }
